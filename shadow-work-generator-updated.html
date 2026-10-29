@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>shadow work prompt generator</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}html,body{margin:0;min-width:0;background:#080808}body{color:#eadab9;font-family:Georgia,'Times New Roman',serif}.widget{width:100%;padding:clamp(15px,4vw,32px);border:1px solid #392e1e;background:#080808}.stars{text-align:center;color:#bf9857;letter-spacing:.55em;font-size:17px}.header{text-align:center;margin:14px 0 0}.title{font-size:clamp(20px,4.2vw,27px);letter-spacing:1px;color:#ecd9ac}.sub,.label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#bda77e}.sub{margin-top:9px}.rule{height:1px;background:linear-gradient(90deg,transparent,#68502e,transparent);margin:25px 0}.controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:19px}.label{display:block;margin-bottom:9px}select{width:100%;min-width:0;padding:12px 10px;background:#10100f;color:#eddbb6;border:1px solid #43351f;border-radius:5px;font:13px Georgia,serif;outline:none}select:focus{border-color:#cba769}.prompt-box{min-height:185px;padding:clamp(17px,4vw,28px);border:1px solid #554023;border-radius:6px;text-align:center;background:linear-gradient(145deg,#19150f,#0c0b09);display:flex;flex-direction:column;align-items:center;justify-content:center}.prompt{font-size:clamp(17px,3.6vw,23px);line-height:1.55;margin:18px 0;color:#f0dfc0;overflow-wrap:anywhere}.meta{color:#a9936d;font-size:11px;font-style:italic}.buttons{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;margin:18px 0 0}button{cursor:pointer;font-family:Georgia,serif;border-radius:5px;transition:filter .15s}button:hover{filter:brightness(1.14)}button:focus-visible{outline:2px solid #efd39b;outline-offset:3px}.primary{background:#d0ad72;color:#14100b;padding:12px 18px;border:1px solid #d0ad72;font-weight:bold;font-size:13px}.secondary{background:transparent;color:#e2c995;padding:11px 15px;border:1px solid #574529;font-size:12px}.footer{text-align:center;color:#76654a;font-size:11px;font-style:italic;margin-top:27px}@media(max-width:390px){.controls{grid-template-columns:1fr}.buttons button{width:100%}.widget{padding:17px 13px}.prompt-box{min-height:175px}}@media(prefers-reduced-motion:reduce){button{transition:none}}
+</style>
+</head>
+<body>
+<main class="widget">
+ <div class="stars" aria-hidden="true">✦ ☾ ✧</div>
+ <header class="header"><div class="title">shadow work</div><div class="sub">a journey into the unseen self</div></header>
+ <div class="rule"></div>
+ <section class="controls" aria-label="prompt filters">
+  <div><label class="label" for="theme">reflection theme</label><select id="theme"><option value="all">all themes</option><option value="inner child">inner child</option><option value="self-worth">self-worth</option><option value="relationships">relationships</option><option value="fear & control">fear &amp; control</option><option value="emotions">emotions</option><option value="patterns">patterns &amp; habits</option><option value="identity">identity &amp; authenticity</option></select></div>
+  <div><label class="label" for="depth">reflection depth</label><select id="depth"><option value="all">any depth</option><option value="gentle">gentle</option><option value="moderate">moderate</option><option value="deep">deep</option></select></div>
+ </section>
+ <section class="prompt-box" aria-live="polite"><div class="sub" id="counter">✦ your reflection ✦</div><div class="prompt" id="prompt">what parts of yourself do you only allow others to see when you feel completely safe?</div><div class="meta" id="meta">identity &amp; authenticity · gentle</div></section>
+ <div class="buttons"><button type="button" class="primary" id="generate">✧ generate prompt</button><button type="button" class="secondary" id="copy">copy prompt</button></div>
+ <footer class="footer">✧ reflect at your own pace ✧</footer>
+</main>
+<script>
+const prompts=[
+['inner child','gentle','what did you love doing as a child that you no longer make time for?'],
+['inner child','gentle','what words did you need to hear more often when you were younger?'],
+['inner child','moderate','what childhood expectation do you still place on yourself?'],
+['inner child','moderate','when do you feel younger than your actual age, and what do you need in those moments?'],
+['inner child','deep','what beliefs about love did you develop during childhood that you still carry?'],
+['inner child','deep','what did you learn to hide about yourself to feel accepted?'],
+['self-worth','gentle','what qualities do you appreciate in yourself when nobody is watching?'],
+['self-worth','gentle','what compliment is hardest for you to accept?'],
+['self-worth','moderate','whose approval do you seek even when it conflicts with your own needs?'],
+['self-worth','moderate','what personal standard would you never expect someone you love to meet?'],
+['self-worth','deep','what do you fear would happen if you stopped proving your worth?'],
+['self-worth','deep','when did you begin associating your value with what you can provide?'],
+['relationships','gentle','what helps you feel genuinely understood by another person?'],
+['relationships','gentle','what boundaries make your relationships feel healthier?'],
+['relationships','moderate','what do you struggle to ask for directly in relationships?'],
+['relationships','moderate','how do you respond when someone needs space from you?'],
+['relationships','deep','what recurring relationship dynamic feels familiar even when it hurts?'],
+['relationships','deep','where have you confused being needed with being loved?'],
+['fear & control','gentle','what uncertainty are you learning to tolerate?'],
+['fear & control','gentle','what helps you feel grounded when plans change?'],
+['fear & control','moderate','what do you try to control when you are feeling vulnerable?'],
+['fear & control','moderate','what opportunities have you avoided because you feared making a mistake?'],
+['fear & control','deep','what do you believe would happen if you allowed yourself to disappoint someone?'],
+['fear & control','deep','which fear has influenced your decisions more than you would like?'],
+['emotions','gentle','which emotion do you find easiest to express, and why?'],
+['emotions','gentle','how does your body tell you that you need rest?'],
+['emotions','moderate','which feelings do you tend to explain away rather than experience?'],
+['emotions','moderate','what situations bring out anger that you struggle to express?'],
+['emotions','deep','what emotions have you learned to associate with shame?'],
+['emotions','deep','what feeling are you most afraid of allowing yourself to fully acknowledge?'],
+['patterns','gentle','what habit has been quietly helping you lately?'],
+['patterns','gentle','what part of your routine reflects a need you rarely acknowledge?'],
+['patterns','moderate','what do you repeatedly postpone, and what feelings surround it?'],
+['patterns','moderate','when do you act against your own priorities to avoid discomfort?'],
+['patterns','deep','what behaviour once protected you but now limits your choices?'],
+['patterns','deep','what do you gain from holding onto a pattern you want to change?'],
+['identity','gentle','what parts of yourself do you only allow others to see when you feel completely safe?'],
+['identity','gentle','when do you feel most comfortable expressing your personality?'],
+['identity','moderate','which parts of your identity feel shaped by other people’s expectations?'],
+['identity','moderate','what opinion do you hide because you fear being judged?'],
+['identity','deep','who would you be if nobody expected you to remain the person you used to be?'],
+['identity','deep','which version of yourself are you still trying to live up to?']
+];
+const $=id=>document.getElementById(id);
+// Prompt-building combinations provide a very large pool without an API key.
+const themes={
+ 'inner child':['the expectations you had as a child','your childhood interests','the comfort you needed growing up','the ways you sought approval when you were young','the rules you learned about expressing feelings','the responsibilities you carried when you were younger','the way adults responded to your needs','your earliest memories of belonging','the freedom to play and explore','the messages you received about mistakes','the protection you needed growing up','the parts of childhood you miss'],
+ 'self-worth':['your relationship with praise','your definition of success','the standards you set for yourself','your need for external validation','how you respond to mistakes','the way you speak to yourself','your willingness to accept support','your sense of personal value','your relationship with achievement','the expectations you think others have of you','your ability to recognise your strengths','your comfort with being imperfect'],
+ 'relationships':['your expectations of closeness','the boundaries you set','how you ask for reassurance','how you handle disagreements','your fear of disappointing others','the way you give and receive affection','your response to emotional distance','the roles you take in friendships','your willingness to ask for help','your experience of trust','the ways you communicate your needs','your response to being misunderstood'],
+ 'fear & control':['uncertainty about the future','your need to plan ahead','your reaction when plans change','your fear of being judged','your relationship with responsibility','your tendency to anticipate problems','the situations you avoid','your response to making mistakes','the limits of what you can control','your comfort with asking for help','your fears around change','your expectations of safety'],
+ 'emotions':['your relationship with anger','the feelings you find difficult to name','how you respond to sadness','your comfort with expressing joy','the emotions you tend to hide','your experience of jealousy','the way you process disappointment','your response to feeling vulnerable','the emotions you experience during conflict','your relationship with guilt','how you recognise emotional exhaustion','what helps you feel calm'],
+ 'patterns':['your tendency to procrastinate','the habits you repeat under stress','the way you manage conflict','your daily routines','how you make difficult decisions','the promises you make to yourself','your response to criticism','how you handle boredom','the situations where you overcommit','the roles you repeatedly take on','the choices you make when tired','the patterns you learned from others'],
+ 'identity':['the parts of yourself you keep private','the labels you use to describe yourself','the expectations others have placed on you','your relationship with change','the interests you rarely share','the values you want to live by','the versions of yourself you have outgrown','your comfort with being different','the opinions you hesitate to express','your definition of authenticity','the qualities you admire in yourself','the roles you feel expected to play']
+};
+const lenses=['in your everyday life','when you are with other people','when you have time to yourself','during difficult conversations','when you feel under pressure','when things go unexpectedly','when you are feeling confident','when you are feeling uncertain','in a recent situation','when you look back on the past year','in moments when you need support','when you are making an important choice'];
+const frames={
+ gentle:[
+  'what do you notice about {topic} {lens}?',
+  'what feels supportive to you when you think about {topic} {lens}?',
+  'what is one thing you would like to understand better about {topic} {lens}?',
+  'how would you describe your experience of {topic} {lens}?',
+  'what small change might make your experience of {topic} easier {lens}?',
+  'what would a kinder approach to {topic} look like {lens}?',
+  'what helps you feel comfortable exploring {topic} {lens}?',
+  'what strengths have you discovered through your experience of {topic} {lens}?'
+ ],
+ moderate:[
+  'what assumptions do you make about {topic} {lens}?',
+  'how does {topic} influence the choices you make {lens}?',
+  'which expectations shape your experience of {topic} {lens}?',
+  'what do you find hardest to communicate about {topic} {lens}?',
+  'how has your understanding of {topic} changed over time, particularly {lens}?',
+  'what boundaries might help you navigate {topic} {lens}?',
+  'what feelings tend to surface when you reflect on {topic} {lens}?',
+  'what do you tend to overlook about your experience of {topic} {lens}?'
+ ],
+ deep:[
+  'what underlying belief might be shaping your experience of {topic} {lens}?',
+  'where did you first learn the expectations you now associate with {topic}, and how do they affect you {lens}?',
+  'what would you fear losing if your relationship with {topic} changed {lens}?',
+  'how might an old protective response still be affecting {topic} {lens}?',
+  'what truth about {topic} feels difficult for you to acknowledge {lens}?',
+  'what unmet need might be connected to your experience of {topic} {lens}?',
+  'what part of your story about {topic} deserves to be reconsidered {lens}?',
+  'what might you discover if you questioned your strongest belief about {topic} {lens}?'
+ ]
+};
+let current=prompts[36], count=0;
+const seen=new Set([current[2]]);
+function rand(n){return Math.floor(Math.random()*n)}
+function build(theme,depth){
+ const topic=themes[theme][rand(themes[theme].length)];
+ const lens=lenses[rand(lenses.length)];
+ const frame=frames[depth][rand(frames[depth].length)];
+ return frame.replaceAll('{topic}',topic).replaceAll('{lens}',lens);
+}
+function generate(){
+ const pickedTheme=$('theme').value,pickedDepth=$('depth').value;
+ const names=Object.keys(themes);
+ let next,theme,depth;
+ // Millions of combinations; prevent repeats until the selected pool is exhausted.
+ for(let attempt=0;attempt<200;attempt++){
+  theme=pickedTheme==='all'?names[rand(names.length)]:pickedTheme;
+  depth=pickedDepth==='all'?['gentle','moderate','deep'][rand(3)]:pickedDepth;
+  next=build(theme,depth);
+  if(!seen.has(next))break;
+ }
+ if(seen.has(next)){
+  // Extremely unlikely except after sustained use with narrow filters.
+  seen.clear();
+ }
+ seen.add(next);
+ current=[theme,depth,next];count++;
+ $('counter').textContent='✦ reflection '+count+' ✦';
+ $('prompt').textContent=current[2];
+ $('meta').textContent=(theme==='identity'?'identity & authenticity':theme==='patterns'?'patterns & habits':theme)+' · '+depth;
+}
+async function copyPrompt(){
+ const button=$('copy');try{await navigator.clipboard.writeText(current[2]);button.textContent='copied ✓'}
+ catch(e){const area=document.createElement('textarea');area.value=current[2];document.body.appendChild(area);area.select();const ok=document.execCommand('copy');area.remove();button.textContent=ok?'copied ✓':'copy unavailable'}
+ setTimeout(()=>button.textContent='copy prompt',1400);
+}
+$('generate').addEventListener('click',generate);$('copy').addEventListener('click',copyPrompt);
+</script>
+</body>
+</html>
